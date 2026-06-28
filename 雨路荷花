@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>雨夜荷塘</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #0a1410;
+    font-family: "Songti SC", "STSong", "Noto Serif SC", serif;
+  }
+
+  .stage {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 70% 50% at 78% 8%, rgba(180,200,170,0.10), transparent 60%),
+      linear-gradient(180deg,
+        #0c1a16 0%,
+        #0e211c 28%,
+        #11251f 50%,
+        #0a1d18 72%,
+        #061310 100%);
+  }
+
+  .hills {
+    position: absolute;
+    left: -5%;
+    right: -5%;
+    bottom: 38%;
+    height: 28%;
+    opacity: 0.5;
+    filter: blur(0.5px);
+  }
+  .hills svg { width: 100%; height: 100%; display: block; }
+
+  .moon-wrap {
+    position: absolute;
+    top: 9%;
+    right: 13%;
+    width: 130px;
+    height: 130px;
+  }
+  .moon-halo {
+    position: absolute;
+    inset: -60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,238,210,0.18), rgba(232,238,210,0.05) 45%, transparent 72%);
+    animation: haloBreathe 7s ease-in-out infinite;
+  }
+  @keyframes haloBreathe {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.06); }
+  }
+  .moon {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 35%, #f4f1de 0%, #dfe2c0 45%, #c3cba0 85%);
+    box-shadow: 0 0 40px rgba(220,228,190,0.35);
+    opacity: 0.88;
+  }
+  .moon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 70% 65%, rgba(150,160,120,0.25), transparent 40%);
+  }
+
+  .inscription {
+    position: absolute;
+    top: 7%;
+    left: 7%;
+    z-index: 6;
+    color: #d8e4d4;
+    writing-mode: vertical-rl;
+    letter-spacing: 0.5em;
+    font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+    text-shadow: 0 0 18px rgba(180,210,180,0.35);
+    opacity: 0.92;
+  }
+  .inscription .small {
+    display: block;
+    margin-top: 1.2em;
+    font-size: 0.5em;
+    letter-spacing: 0.4em;
+    color: #9fb89a;
+    opacity: 0.8;
+  }
+  .seal {
+    position: absolute;
+    top: 7%;
+    left: calc(7% + 2.6em);
+    z-index: 6;
+    width: 30px;
+    height: 30px;
+    border: 1.5px solid rgba(199,90,70,0.75);
+    color: rgba(199,90,70,0.85);
+    font-size: 0.62rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    letter-spacing: 1px;
+    opacity: 0.8;
+  }
+
+  .rain-far, .rain-near {
+    position: absolute;
+    inset: -10% -10% -10% -10%;
+    pointer-events: none;
+    z-index: 9;
+  }
+  .rain-far {
+    background-image: repeating-linear-gradient(
+      100deg,
+      transparent 0 36px,
+      rgba(200,225,215,0.10) 37px 38px,
+      transparent 39px 70px
+    );
+    background-size: 220px 300px;
+    animation: fall1 0.9s linear infinite;
+    opacity: 0.55;
+  }
+  .rain-near {
+    background-image: repeating-linear-gradient(
+      100deg,
+      transparent 0 22px,
+      rgba(210,232,222,0.22) 23px 24.6px,
+      transparent 25.6px 50px
+    );
+    background-size: 160px 220px;
+    animation: fall2 0.5s linear infinite;
+    opacity: 0.7;
+  }
+  @keyframes fall1 { from { transform: translate(0,-60px); } to { transform: translate(-40px, 320px); } }
+  @keyframes fall2 { from { transform: translate(0,-60px); } to { transform: translate(-55px, 240px); } }
+
+  .mist {
+    position: absolute;
+    left: -15%;
+    right: -15%;
+    height: 130px;
+    filter: blur(14px);
+    pointer-events: none;
+    z-index: 5;
+    mix-blend-mode: screen;
+  }
+  .mist.m1 { bottom: 40%; background: radial-gradient(ellipse, rgba(170,200,180,0.16), transparent 70%); animation: drift1 22s ease-in-out infinite alternate; }
+  .mist.m2 { bottom: 30%; height: 90px; background: radial-gradient(ellipse, rgba(190,210,190,0.12), transparent 70%); animation: drift2 28s ease-in-out infinite alternate; }
+  @keyframes drift1 { to { transform: translateX(90px); opacity: 0.6; } }
+  @keyframes drift2 { to { transform: translateX(-70px); opacity: 0.5; } }
+
+  .water {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 42%;
+    overflow: hidden;
+    background: linear-gradient(180deg,
+      rgba(20,55,46,0.55) 0%,
+      #0d2b24 35%,
+      #081d18 70%,
+      #04130f 100%);
+  }
+  .water::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, transparent 0%, rgba(220,235,210,0.05) 45%, transparent 100%);
+  }
+  .moon-reflection {
+    position: absolute;
+    top: -6%;
+    right: 16%;
+    width: 50px;
+    height: 130px;
+    background: linear-gradient(180deg, rgba(230,235,205,0.4), rgba(230,235,205,0.05));
+    filter: blur(3px);
+    opacity: 0.5;
+    animation: reflShimmer 4s ease-in-out infinite;
+    transform: skewX(-2deg);
+  }
+  @keyframes reflShimmer {
+    0%, 100% { opacity: 0.35; transform: skewX(-2deg) scaleY(1); }
+    50% { opacity: 0.55; transform: skewX(2deg) scaleY(1.04); }
+  }
+
+  .ripple-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .ripple {
+    fill: none;
+    stroke: rgba(190,225,210,0.22);
+    stroke-width: 1;
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .ripple.auto {
+    animation: rippleGrow 4.5s ease-out infinite;
+  }
+
+  @keyframes rippleGrow {
+    0% { transform: scale(0.2); opacity: 0; stroke-width: 1.4; }
+    8% { opacity: 0.5; }
+    65% { opacity: 0.12; }
+    100% { transform: scale(2.6); opacity: 0; stroke-width: 0.3; }
+  }
+
+  .lotus-leaf {
+    position: absolute;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.35));
+    animation: leafSway var(--sway, 6s) ease-in-out infinite alternate;
+  }
+  @keyframes leafSway {
+    from { transform: rotate(var(--r0,0deg)) translateY(0); }
+    to { transform: rotate(var(--r1,2deg)) translateY(-3px); }
+  }
+
+  .firefly {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #eaffb0;
+    box-shadow: 0 0 8px #d8f97a, 0 0 18px rgba(190,255,120,0.6);
+    animation: ffmove var(--dur,8s) ease-in-out infinite, ffglow 2.6s ease-in-out infinite;
+    z-index: 7;
+  }
+  @keyframes ffglow {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 0.95; }
+  }
+  @keyframes ffmove {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(var(--x1,30px), var(--y1,-20px)); }
+    50% { transform: translate(var(--x2,10px), var(--y2,-45px)); }
+    75% { transform: translate(var(--x3,-25px), var(--y3,-15px)); }
+    100% { transform: translate(0,0); }
+  }
+
+  .dragonfly {
+    position: absolute;
+    z-index: 6;
+    width: 60px;
+    height: 30px;
+    animation: dragonflyFlight 17s ease-in-out infinite;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+  }
+  @keyframes dragonflyFlight {
+    0%   { left: -8%; top: 38%; transform: rotate(8deg) scale(1); }
+    20%  { left: 22%; top: 30%; transform: rotate(-4deg) scale(1.05); }
+    42%  { left: 48%; top: 42%; transform: rotate(10deg) scale(0.95); }
+    60%  { left: 68%; top: 26%; transform: rotate(-8deg) scale(1.1); }
+    80%  { left: 88%; top: 36%; transform: rotate(4deg) scale(1); }
+    100% { left: 108%; top: 30%; transform: rotate(8deg) scale(1); }
+  }
+  .dragonfly .body {
+    position: absolute;
+    left: 22px; top: 12px;
+    width: 32px; height: 4px;
+    background: linear-gradient(90deg, #4fd9c8, #1f7d6f);
+    border-radius: 4px;
+  }
+  .dragonfly .wing {
+    position: absolute;
+    width: 22px; height: 11px;
+    background: rgba(210,245,235,0.45);
+    border-radius: 60% 40%;
+    animation: dwing 0.16s ease-in-out infinite alternate;
+  }
+  .dragonfly .w1 { left: 10px; top: 4px; transform-origin: right center; }
+  .dragonfly .w2 { left: 10px; top: 15px; transform-origin: right center; }
+  .dragonfly .w3 { left: 34px; top: 4px; transform-origin: left center; }
+  .dragonfly .w4 { left: 34px; top: 15px; transform-origin: left center; }
+  @keyframes dwing { from { transform: scaleY(0.7) rotate(-4deg); } to { transform: scaleY(1.1) rotate(4deg); } }
+
+  .butterfly {
+    position: absolute;
+    z-index: 6;
+    width: 36px;
+    height: 30px;
+    animation: butterflyFlight 14s ease-in-out infinite;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+  }
+  @keyframes butterflyFlight {
+    0%   { left: 78%; top: 50%; transform: rotate(-6deg); }
+    18%  { left: 64%; top: 40%; transform: rotate(8deg); }
+    36%  { left: 70%; top: 58%; transform: rotate(-10deg); }
+    54%  { left: 52%; top: 46%; transform: rotate(6deg); }
+    72%  { left: 60%; top: 62%; transform: rotate(-4deg); }
+    100% { left: 78%; top: 50%; transform: rotate(-6deg); }
+  }
+  .butterfly .wing {
+    position: absolute;
+    width: 16px; height: 20px;
+    background: radial-gradient(circle at 35% 30%, rgba(232,200,170,0.85), rgba(190,130,150,0.65));
+    animation: bwing 0.5s ease-in-out infinite alternate;
+  }
+  .butterfly .l { left: 0; top: 2px; border-radius: 80% 30% 70% 30%; transform-origin: right center; }
+  .butterfly .r { left: 18px; top: 2px; border-radius: 30% 80% 30% 70%; transform-origin: left center; }
+  @keyframes bwing { from { transform: rotateY(10deg) scaleX(0.85); } to { transform: rotateY(50deg) scaleX(1.05); } }
+
+  .vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 12;
+    background: radial-gradient(ellipse 90% 80% at 50% 45%, transparent 55%, rgba(0,0,0,0.45) 100%);
+  }
+
+  .poem-line {
+    position: absolute;
+    bottom: 5%;
+    right: 6%;
+    z-index: 6;
+    color: rgba(216,228,206,0.55);
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    writing-mode: vertical-rl;
+  }
+
+  @media (max-width: 640px) {
+    .inscription { font-size: 1.3rem; top: 6%; left: 5%; }
+    .seal { left: calc(5% + 1.9em); width: 22px; height: 22px; font-size: 0.5rem; }
+    .moon-wrap { width: 80px; height: 80px; top: 7%; right: 8%; }
+    .poem-line { font-size: 0.7rem; bottom: 4%; right: 4%; }
+  }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <div class="hills">
+    <svg viewBox="0 0 1200 200" preserveAspectRatio="none">
+      <path d="M0,160 Q150,90 300,140 T600,120 T900,150 T1200,110 L1200,200 L0,200 Z"
+            fill="#0c211c"/>
+      <path d="M0,180 Q200,130 420,170 T800,150 T1200,170 L1200,200 L0,200 Z"
+            fill="#0a1c17" opacity="0.8"/>
+    </svg>
+  </div>
+
+  <div class="inscription">雨夜荷塘<span class="small">夏夜独坐 听雨观莲</span></div>
+  <div class="seal">荷</div>
+
+  <div class="moon-wrap">
+    <div class="moon-halo"></div>
+    <div class="moon"></div>
+  </div>
+
+  <div class="mist m1"></div>
+  <div class="mist m2"></div>
+
+  <div class="firefly" style="left:14%; top:46%; --dur:7.5s; --x1:22px; --y1:-30px; --x2:5px; --y2:-50px; --x3:-18px; --y3:-12px;"></div>
+  <div class="firefly" style="left:61%; top:38%; --dur:9.2s; --x1:-26px; --y1:-18px; --x2:-10px; --y2:-40px; --x3:20px; --y3:-22px;"></div>
+  <div class="firefly" style="left:33%; top:55%; --dur:6.4s; --x1:18px; --y1:-22px; --x2:30px; --y2:-8px; --x3:-12px; --y3:10px;"></div>
+  <div class="firefly" style="left:80%; top:50%; --dur:8.1s; --x1:-20px; --y1:-26px; --x2:-34px; --y2:-6px; --x3:8px; --y3:-15px;"></div>
+  <div class="firefly" style="left:46%; top:33%; --dur:10s; --x1:15px; --y1:-14px; --x2:-5px; --y2:-36px; --x3:-22px; --y3:-8px;"></div>
+
+  <div class="dragonfly">
+    <div class="body"></div>
+    <div class="wing w1"></div><div class="wing w2"></div><div class="wing w3"></div><div class="wing w4"></div>
+  </div>
+
+  <div class="butterfly">
+    <div class="wing l"></div><div class="wing r"></div>
+  </div>
+
+  <div class="water" id="water">
+    <div class="moon-reflection"></div>
+    <svg class="ripple-svg" id="rippleSvg" viewBox="0 0 1200 500" preserveAspectRatio="none">
+      <ellipse class="ripple auto" cx="300" cy="120" rx="40" ry="14" style="animation-delay:0s"/>
+      <ellipse class="ripple auto" cx="780" cy="200" rx="50" ry="16" style="animation-delay:1.5s"/>
+      <ellipse class="ripple auto" cx="520" cy="320" rx="35" ry="12" style="animation-delay:3s"/>
+      <ellipse class="ripple auto" cx="950" cy="90" rx="30" ry="10" style="animation-delay:2.2s"/>
+      <ellipse class="ripple auto" cx="150" cy="280" rx="45" ry="15" style="animation-delay:0.8s"/>
+    </svg>
+
+    <svg style="position:absolute; left:4%; bottom:8%; width:200px; --sway:7s; --r0:-3deg; --r1:1deg;" class="lotus-leaf" viewBox="0 0 200 110">
+      <path d="M100,8 C150,12 188,45 178,75 C168,100 130,104 100,98 C60,92 14,92 12,62 C10,32 55,4 100,8 Z"
+            fill="#234d3a" stroke="#1a3a2c" stroke-width="1.5"/>
+      <path d="M100,8 L100,98 M100,52 L40,30 M100,52 L20,62 M100,52 L60,90 M100,52 L150,85 M100,52 L172,60 M100,52 L150,22"
+            stroke="#16302450" stroke-width="1" fill="none"/>
+    </svg>
+
+    <svg style="position:absolute; right:8%; bottom:6%; width:240px; --sway:9s; --r0:2deg; --r1:-2deg;" class="lotus-leaf" viewBox="0 0 200 110">
+      <path d="M105,6 C160,10 192,40 182,72 C170,100 124,106 90,98 C48,90 8,86 10,55 C12,24 58,2 105,6 Z"
+            fill="#1f4636" stroke="#163428" stroke-width="1.5"/>
+      <path d="M100,50 L100,4 M100,50 L34,28 M100,50 L16,58 M100,50 L55,92 M100,50 L140,92 M100,50 L178,55 M100,50 L150,18"
+            stroke="#13281e50" stroke-width="1" fill="none"/>
+    </svg>
+
+    <svg style="position:absolute; left:38%; bottom:1%; width:150px; --sway:6.2s; --r0:-1deg; --r1:3deg;" class="lotus-leaf" viewBox="0 0 200 110">
+      <path d="M100,12 C145,16 180,42 170,68 C160,92 125,98 95,92 C58,86 20,84 18,58 C16,30 58,8 100,12 Z"
+            fill="#28503c" stroke="#1c3b2c" stroke-width="1.5"/>
+      <path d="M95,55 L95,14 M95,55 L36,32 M95,55 L22,60 M95,55 L60,88 M95,55 L140,86 M95,55 L165,60"
+            stroke="#16301e50" stroke-width="1" fill="none"/>
+    </svg>
+
+    <svg style="position:absolute; left:11%; bottom:23%; width:90px;" viewBox="0 0 100 100">
+      <g fill="none" stroke="#e8c9d8" stroke-width="1.4">
+        <path d="M50,85 C36,78 28,60 38,46 C44,38 56,38 62,46 C72,60 64,78 50,85 Z" fill="#f3dde7" opacity="0.92"/>
+        <path d="M50,85 C30,75 22,52 36,36 C44,28 56,28 64,36" opacity="0.8"/>
+        <path d="M50,85 C70,75 78,52 64,36" opacity="0.8"/>
+        <path d="M50,85 C42,68 42,48 50,30" opacity="0.7"/>
+        <path d="M50,85 C58,68 58,48 50,30" opacity="0.7"/>
+      </g>
+      <circle cx="50" cy="48" r="6" fill="#f0c861"/>
+    </svg>
+
+    <svg style="position:absolute; right:16%; bottom:18%; width:75px; opacity:0.92;" viewBox="0 0 100 100">
+      <g fill="none" stroke="#ecd2de" stroke-width="1.4">
+        <path d="M50,88 C38,80 30,62 40,48 C46,40 54,40 60,48 C70,62 62,80 50,88 Z" fill="#f6e2ec" opacity="0.9"/>
+        <path d="M50,88 C32,78 26,55 38,40" opacity="0.75"/>
+        <path d="M50,88 C68,78 74,55 62,40" opacity="0.75"/>
+      </g>
+      <circle cx="50" cy="50" r="5" fill="#eec05c"/>
+    </svg>
+  </div>
+
+  <div class="mist m2" style="bottom:8%; opacity:0.6;"></div>
+
+  <div class="rain-far"></div>
+  <div class="rain-near"></div>
+
+  <div class="poem-line">荷动知鱼戏 灯疏觉雨深</div>
+
+  <div class="vignette"></div>
+</div>
+</body>
+</html>
