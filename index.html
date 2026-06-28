@@ -1,23 +1,348 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Ruru's Rainbow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雨夜荷花池</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            overflow: hidden;
             display: flex;
-            justify-content: center;
             align-items: center;
-            background: linear-gradient(to right, #ff9a9e, #fad0c4, #fad0c4, #a18cd1, #fbc2eb);
-            font-family: sans-serif;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            justify-content: center;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            color: #f3fff9;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(188, 237, 255, 0.36), transparent 30%),
+                linear-gradient(180deg, #101a3a 0%, #142b4f 44%, #163f51 68%, #0b2d35 100%);
+        }
+
+        .pond-scene {
+            position: relative;
+            width: min(1120px, 100vw);
+            height: min(720px, 100vh);
+            overflow: hidden;
+            border-radius: 28px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+            background:
+                radial-gradient(circle at 78% 16%, rgba(255, 255, 210, 0.24), transparent 8%),
+                linear-gradient(180deg, rgba(12, 22, 48, 0.1) 0 32%, rgba(15, 63, 77, 0.82) 58%, rgba(6, 54, 55, 0.98) 100%);
+        }
+
+        .moon {
+            position: absolute;
+            top: 50px;
+            right: 90px;
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            background: #fffbd2;
+            box-shadow: 0 0 34px #fff8b1, 0 0 90px rgba(255, 250, 177, 0.5);
+            opacity: 0.9;
+        }
+
+        .title {
+            position: absolute;
+            z-index: 5;
+            top: 56px;
+            left: 60px;
+            margin: 0;
+            font-size: clamp(2rem, 5vw, 4.6rem);
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 16px rgba(141, 255, 218, 0.8), 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            position: absolute;
+            z-index: 5;
+            top: 145px;
+            left: 66px;
+            margin: 0;
+            font-size: clamp(0.95rem, 2vw, 1.25rem);
+            color: #c9fff0;
+            letter-spacing: 0.25em;
+        }
+
+        .rain {
+            position: absolute;
+            inset: -140px 0 0;
+            z-index: 8;
+            pointer-events: none;
+            background-image:
+                repeating-linear-gradient(105deg, transparent 0 28px, rgba(196, 237, 255, 0.38) 29px 31px, transparent 32px 58px),
+                repeating-linear-gradient(105deg, transparent 0 58px, rgba(196, 237, 255, 0.22) 59px 61px, transparent 62px 98px);
+            background-size: 190px 260px, 260px 330px;
+            animation: rainfall 0.56s linear infinite;
+            opacity: 0.86;
+        }
+
+        @keyframes rainfall {
+            from { transform: translate3d(0, -80px, 0); }
+            to { transform: translate3d(-55px, 120px, 0); }
+        }
+
+        .water {
+            position: absolute;
+            left: -5%;
+            right: -5%;
+            bottom: -8%;
+            height: 58%;
+            overflow: hidden;
+            border-radius: 50% 50% 0 0 / 16% 16% 0 0;
+            background:
+                radial-gradient(ellipse at 35% 18%, rgba(147, 255, 218, 0.32), transparent 18%),
+                radial-gradient(ellipse at 68% 45%, rgba(81, 185, 197, 0.28), transparent 20%),
+                linear-gradient(180deg, rgba(27, 115, 126, 0.88), #063f49 66%, #042f37 100%);
+            box-shadow: inset 0 16px 52px rgba(190, 255, 236, 0.17);
+        }
+
+        .water::before,
+        .water::after {
+            content: "";
+            position: absolute;
+            inset: -35% -10%;
+            background-image:
+                radial-gradient(ellipse at center, transparent 44%, rgba(202, 255, 246, 0.28) 46%, transparent 50%),
+                radial-gradient(ellipse at center, transparent 45%, rgba(94, 207, 211, 0.2) 47%, transparent 51%);
+            background-size: 170px 42px, 260px 62px;
+            animation: ripple 8s linear infinite;
+            transform: rotate(-4deg);
+            opacity: 0.8;
+        }
+
+        .water::after {
+            animation-duration: 12s;
+            animation-direction: reverse;
+            opacity: 0.45;
+            filter: blur(1px);
+        }
+
+        @keyframes ripple {
+            to { transform: translateX(-170px) rotate(-4deg); }
+        }
+
+        .lotus-pad {
+            position: absolute;
+            width: 170px;
+            height: 82px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 38% 38%, #60b876, #1d704f 72%);
+            box-shadow: inset -18px -14px 22px rgba(4, 42, 30, 0.28), 0 8px 18px rgba(0, 0, 0, 0.25);
+            transform: rotate(var(--rotate));
+        }
+
+        .lotus-pad::after {
+            content: "";
+            position: absolute;
+            top: 34px;
+            left: 76px;
+            border: 24px solid transparent;
+            border-top-color: rgba(8, 62, 46, 0.82);
+            transform: rotate(16deg);
+        }
+
+        .pad-1 { left: 95px; bottom: 115px; --rotate: -8deg; }
+        .pad-2 { right: 120px; bottom: 135px; --rotate: 11deg; width: 205px; }
+        .pad-3 { left: 455px; bottom: 68px; --rotate: 3deg; width: 150px; }
+        .pad-4 { right: 385px; bottom: 210px; --rotate: -15deg; width: 135px; }
+
+        .lotus {
+            position: absolute;
+            z-index: 4;
+            width: 130px;
+            height: 120px;
+        }
+
+        .lotus .petal {
+            position: absolute;
+            left: 50%;
+            bottom: 20px;
+            width: 42px;
+            height: 78px;
+            border-radius: 50% 50% 48% 48%;
+            background: linear-gradient(180deg, #fff0fb 0%, #ff8bd2 58%, #d3318f 100%);
+            transform-origin: bottom center;
+            box-shadow: 0 0 14px rgba(255, 139, 210, 0.48);
+        }
+
+        .petal:nth-child(1) { transform: translateX(-50%) rotate(0deg); }
+        .petal:nth-child(2) { transform: translateX(-50%) rotate(-34deg); }
+        .petal:nth-child(3) { transform: translateX(-50%) rotate(34deg); }
+        .petal:nth-child(4) { transform: translateX(-50%) rotate(-62deg) scale(0.86); }
+        .petal:nth-child(5) { transform: translateX(-50%) rotate(62deg) scale(0.86); }
+        .petal:nth-child(6) { transform: translateX(-50%) translateY(-20px) scale(0.72); background: linear-gradient(#fff7fd, #ffacd9); }
+
+        .lotus::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 18px;
+            width: 28px;
+            height: 20px;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            background: #ffd65d;
+            box-shadow: 0 0 18px #ffe27d;
+        }
+
+        .lotus-1 { left: 122px; bottom: 155px; }
+        .lotus-2 { right: 176px; bottom: 182px; transform: scale(0.85); }
+
+        .firefly {
+            position: absolute;
+            z-index: 7;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #eaff86;
+            box-shadow: 0 0 10px #f4ff7a, 0 0 26px #b9ff66, 0 0 45px rgba(185, 255, 102, 0.72);
+            animation: floatFirefly var(--duration) ease-in-out infinite alternate, glow 1.8s ease-in-out infinite;
+        }
+
+        .firefly:nth-of-type(1) { left: 18%; top: 32%; --duration: 5s; }
+        .firefly:nth-of-type(2) { left: 66%; top: 27%; --duration: 6.2s; animation-delay: -1.5s; }
+        .firefly:nth-of-type(3) { left: 42%; top: 44%; --duration: 4.8s; animation-delay: -2.1s; }
+        .firefly:nth-of-type(4) { left: 82%; top: 49%; --duration: 5.6s; animation-delay: -0.8s; }
+        .firefly:nth-of-type(5) { left: 30%; top: 58%; --duration: 7s; animation-delay: -3s; }
+
+        @keyframes floatFirefly {
+            to { transform: translate(70px, -44px) scale(1.25); }
+        }
+
+        @keyframes glow {
+            50% { opacity: 0.45; box-shadow: 0 0 4px #f4ff7a, 0 0 16px #b9ff66; }
+        }
+
+        .dragonfly, .butterfly {
+            position: absolute;
+            z-index: 6;
+            filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.28));
+        }
+
+        .dragonfly {
+            left: -120px;
+            top: 260px;
+            width: 95px;
+            height: 48px;
+            animation: dragonflyPath 13s ease-in-out infinite;
+        }
+
+        .dragonfly::before {
+            content: "";
+            position: absolute;
+            left: 38px;
+            top: 12px;
+            width: 44px;
+            height: 8px;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #42fff4, #177a8d);
+        }
+
+        .dragonfly span,
+        .butterfly span {
+            position: absolute;
+            background: rgba(185, 255, 255, 0.62);
+            border: 1px solid rgba(236, 255, 255, 0.7);
+            animation: wingBeat 0.22s ease-in-out infinite alternate;
+        }
+
+        .dragonfly .w1 { left: 20px; top: 0; width: 34px; height: 18px; border-radius: 70% 30%; transform-origin: right bottom; }
+        .dragonfly .w2 { left: 48px; top: 0; width: 34px; height: 18px; border-radius: 30% 70%; transform-origin: left bottom; }
+        .dragonfly .w3 { left: 22px; top: 25px; width: 30px; height: 16px; border-radius: 70% 30%; transform-origin: right top; }
+        .dragonfly .w4 { left: 50px; top: 25px; width: 30px; height: 16px; border-radius: 30% 70%; transform-origin: left top; }
+
+        @keyframes dragonflyPath {
+            0% { transform: translate(-80px, 0) rotate(5deg); }
+            45% { transform: translate(640px, -130px) rotate(-10deg); }
+            100% { transform: translate(1260px, 30px) rotate(8deg); }
+        }
+
+        .butterfly {
+            right: 125px;
+            top: 210px;
+            width: 74px;
+            height: 62px;
+            animation: butterflyDrift 7s ease-in-out infinite alternate;
+        }
+
+        .butterfly::before {
+            content: "";
+            position: absolute;
+            left: 35px;
+            top: 20px;
+            width: 6px;
+            height: 30px;
+            border-radius: 8px;
+            background: #5a301c;
+        }
+
+        .butterfly span {
+            background: linear-gradient(135deg, rgba(255, 201, 97, 0.9), rgba(255, 98, 178, 0.78));
+        }
+
+        .butterfly .left { left: 4px; top: 4px; width: 34px; height: 42px; border-radius: 80% 20% 70% 30%; transform-origin: right center; }
+        .butterfly .right { right: 4px; top: 4px; width: 34px; height: 42px; border-radius: 20% 80% 30% 70%; transform-origin: left center; }
+
+        @keyframes wingBeat {
+            from { transform: rotateY(8deg) scaleX(0.82); }
+            to { transform: rotateY(38deg) scaleX(1.08); }
+        }
+
+        @keyframes butterflyDrift {
+            to { transform: translate(-95px, 70px) rotate(-8deg); }
+        }
+
+        .mist {
+            position: absolute;
+            left: -10%;
+            right: -10%;
+            bottom: 250px;
+            height: 90px;
+            background: radial-gradient(ellipse, rgba(207, 255, 245, 0.2), transparent 65%);
+            filter: blur(12px);
+            animation: mistMove 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes mistMove {
+            to { transform: translateX(80px); opacity: 0.55; }
         }
     </style>
 </head>
 <body>
-    <h1>欢迎来到 Ruru 的彩虹仓库！</h1>
+    <main class="pond-scene" aria-label="雨夜荷花池，有水波纹、萤火虫、雨、蜻蜓和蝴蝶">
+        <div class="moon"></div>
+        <h1 class="title">雨夜荷花池</h1>
+        <p class="subtitle">水波轻摇 · 萤火微光 · 夏雨入梦</p>
+
+        <div class="mist"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+
+        <div class="dragonfly" aria-hidden="true">
+            <span class="w1"></span><span class="w2"></span><span class="w3"></span><span class="w4"></span>
+        </div>
+        <div class="butterfly" aria-hidden="true">
+            <span class="left"></span><span class="right"></span>
+        </div>
+
+        <section class="water" aria-hidden="true">
+            <div class="lotus-pad pad-1"></div>
+            <div class="lotus-pad pad-2"></div>
+            <div class="lotus-pad pad-3"></div>
+            <div class="lotus-pad pad-4"></div>
+            <div class="lotus lotus-1"><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span></div>
+            <div class="lotus lotus-2"><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span></div>
+        </section>
+        <div class="rain"></div>
+    </main>
 </body>
 </html>
