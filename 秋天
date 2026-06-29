@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>秋日 · 江汉平原</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body {
+  width:100%; height:100%;
+  overflow:hidden;
+  background: linear-gradient(to bottom, #cfe0e8 0%, #e8d9b8 32%, #eecf8e 55%, #d9a85e 78%, #b9824a 100%);
+  font-family: "Songti SC", "STSong", "SimSun", serif;
+}
+#stage {
+  position:relative;
+  width:100vw; height:100vh;
+}
+
+/* 夕阳 */
+.sun-wrap {
+  position:absolute;
+  top:14%; right:16%;
+  width:80px; height:80px;
+}
+.ray-spoke {
+  position:absolute;
+  top:50%; left:50%;
+  width:0; height:0;
+}
+.ray {
+  position:absolute;
+  bottom:40px; left:-1.5px;
+  width:3px;
+  background: linear-gradient(to top, transparent, #f8c873cc 55%, #fff3da 100%);
+  border-radius:2px;
+  transform-origin: bottom center;
+  animation: rayPulse 3.2s ease-in-out infinite;
+}
+@keyframes rayPulse {
+  0%,100% { opacity:0.45; transform: scaleY(0.9); }
+  50% { opacity:0.9; transform: scaleY(1.08); }
+}
+.sun {
+  position:absolute;
+  top:0; left:0;
+  width:80px; height:80px;
+  border-radius:50%;
+  background: radial-gradient(circle at 40% 35%, #fff3da, #f8c873 55%, #e8975a 100%);
+  box-shadow: 0 0 50px 22px rgba(248,200,115,0.35), 0 0 90px 44px rgba(232,151,90,0.15);
+}
+
+/* 大雁 */
+.geese-flock {
+  position:absolute;
+  top:18%; left:-10%;
+  animation: fly 22s linear infinite;
+}
+.goose {
+  position:absolute;
+  width:0; height:0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 4px solid #3a3530;
+  opacity:0.78;
+  animation: flap 1.1s ease-in-out infinite;
+}
+@keyframes flap {
+  0%,100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.55); }
+}
+@keyframes fly {
+  0% { transform: translate(0,0); }
+  100% { transform: translate(135vw, -6vh); }
+}
+
+/* 远山 */
+.hills {
+  position:absolute;
+  bottom:40%;
+  width:100%;
+  height:13%;
+  background:#8a93a0;
+  opacity:0.5;
+  clip-path: polygon(0% 100%, 0% 55%, 14% 35%, 30% 52%, 46% 25%, 60% 48%, 76% 22%, 90% 45%, 100% 32%, 100% 100%);
+}
+
+/* 地面（收割后的田与落叶地） */
+.ground {
+  position:absolute;
+  bottom:0; left:0;
+  width:100%; height:38%;
+  background: linear-gradient(to bottom, #c99a52 0%, #b8854a 45%, #9c6d3a 100%);
+}
+.stubble-row {
+  position:absolute;
+  bottom:0;
+  width:100%;
+  display:flex;
+  justify-content:space-around;
+}
+.stubble {
+  width:2px;
+  height:14px;
+  background: linear-gradient(to top, #7a5a2e, #b08a4e);
+  border-radius:1px;
+}
+
+/* 树（金黄叶） */
+.tree {
+  position:absolute;
+  bottom:30%;
+}
+.trunk {
+  position:absolute;
+  bottom:0; left:50%;
+  transform:translateX(-50%);
+  width:10px; height:70px;
+  background: linear-gradient(to top, #4a3322, #6b4a2e);
+  border-radius:2px;
+}
+.canopy {
+  position:absolute;
+  bottom:58px; left:50%;
+  transform:translateX(-50%);
+  width:110px; height:90px;
+  border-radius:50% 50% 45% 45%;
+  background: radial-gradient(circle at 35% 30%, #f4d77a, #e0a942 55%, #c9842e 100%);
+}
+.canopy.c2 {
+  width:80px; height:65px;
+  bottom:48px;
+  background: radial-gradient(circle at 40% 35%, #f6e08a, #e3b550 55%, #cf8f38 100%);
+}
+
+/* 橘子树 */
+.orange-tree {
+  position:absolute;
+  bottom:28%;
+}
+.orange-canopy {
+  position:absolute;
+  bottom:50px; left:50%;
+  transform:translateX(-50%);
+  width:95px; height:75px;
+  border-radius:50% 50% 45% 45%;
+  background: radial-gradient(circle at 35% 30%, #5a7a3e, #436029 60%, #344a1f 100%);
+}
+.orange-fruit {
+  position:absolute;
+  width:11px; height:11px;
+  border-radius:50%;
+  background: radial-gradient(circle at 35% 30%, #ffce6e, #f5963a 65%, #d97a22 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+}
+
+/* 飘落的叶子 */
+.falling-leaf {
+  position:absolute;
+  width:9px; height:7px;
+  border-radius: 60% 10% 60% 10%;
+  background: linear-gradient(135deg, #f6d27a, #d98a2e);
+  animation: leafFall linear infinite, leafSpin 2.4s linear infinite;
+}
+@keyframes leafFall {
+  0%   { transform: translateY(0) translateX(0); opacity:0.9; }
+  70%  { opacity:0.7; }
+  100% { transform: translateY(10vh) translateX(16px); opacity:0; }
+}
+@keyframes leafSpin {
+  0% { rotate: 0deg; }
+  100% { rotate: 360deg; }
+}
+
+.title {
+  position:absolute;
+  top:6%; left:7%;
+  color:#4a3520;
+  font-size:22px;
+  letter-spacing:8px;
+  opacity:0;
+  animation: fadeIn 2.5s ease forwards;
+  animation-delay: 0.3s;
+  text-shadow: 0 1px 6px rgba(255,255,255,0.35);
+}
+.title .sub {
+  display:block;
+  margin-top:6px;
+  font-size:11px;
+  letter-spacing:3px;
+  color:#6b5536;
+}
+.poem {
+  position:absolute;
+  bottom:8%;
+  right:6%;
+  text-align:right;
+  color:#4a3520;
+  text-shadow: 0 1px 8px rgba(255,255,255,0.45);
+}
+.poem .line {
+  font-size:17px;
+  letter-spacing:3px;
+  line-height:1.9;
+  opacity:0;
+  animation: fadeIn 2s ease forwards;
+}
+.poem .line:nth-child(1){ animation-delay: 0.6s; }
+.poem .line:nth-child(2){ animation-delay: 2.2s; }
+.poem .source {
+  margin-top:10px;
+  font-size:12px;
+  letter-spacing:2px;
+  color:#7a6442;
+  opacity:0;
+  animation: fadeIn 2s ease forwards;
+  animation-delay: 3.6s;
+}
+@keyframes fadeIn { to { opacity:0.95; } }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="sun-wrap" id="sunWrap">
+    <div class="sun"></div>
+  </div>
+  <div class="hills"></div>
+
+  <div class="ground" id="ground"></div>
+
+  <div class="tree" style="left:6%;">
+    <div class="trunk"></div>
+    <div class="canopy"></div>
+    <div class="canopy c2" style="left:62%;"></div>
+  </div>
+
+  <div class="orange-tree" style="left:72%;" id="orangeTree">
+    <div class="trunk" style="height:55px;"></div>
+    <div class="orange-canopy"></div>
+  </div>
+
+  <div class="geese-flock" id="geeseFlock"></div>
+
+  <div class="title">秋日<span class="sub">江汉平原 · 雁归</span></div>
+  <div class="poem">
+    <div class="line">碧云天，黄叶地，</div>
+    <div class="line">秋色连波，波上寒烟翠。</div>
+    <div class="source">—— 范仲淹《苏幕遮》</div>
+  </div>
+</div>
+
+<script>
+const stage = document.getElementById('stage');
+const ground = document.getElementById('ground');
+const geeseFlock = document.getElementById('geeseFlock');
+const orangeTree = document.getElementById('orangeTree');
+const sunWrap = document.getElementById('sunWrap');
+
+const rayCount = 16;
+for (let i=0;i<rayCount;i++){
+  const spoke=document.createElement('div');
+  spoke.className='ray-spoke';
+  const angle = (360/rayCount)*i;
+  spoke.style.transform = `rotate(${angle}deg)`;
+
+  const ray=document.createElement('div');
+  ray.className='ray';
+  ray.style.height = '20px';
+  ray.style.animationDelay = (Math.random()*3)+'s';
+
+  spoke.appendChild(ray);
+  sunWrap.appendChild(spoke);
+}
+
+for (let row=0; row<3; row++){
+  const rowDiv=document.createElement('div');
+  rowDiv.className='stubble-row';
+  rowDiv.style.bottom=(row*10)+'%';
+  for (let i=0;i<28;i++){
+    const s=document.createElement('div');
+    s.className='stubble';
+    s.style.opacity = 0.4 + Math.random()*0.3;
+    rowDiv.appendChild(s);
+  }
+  ground.appendChild(rowDiv);
+}
+
+const geesePositions = [
+  {x:0,y:0},{x:18,y:10},{x:36,y:20},{x:-18,y:10},{x:-36,y:20},
+  {x:54,y:30},{x:-54,y:30}
+];
+geesePositions.forEach((p,i)=>{
+  const g=document.createElement('div');
+  g.className='goose';
+  g.style.left=(p.x)+'px';
+  g.style.top=(p.y)+'px';
+  g.style.animationDelay=(i*0.08)+'s';
+  geeseFlock.appendChild(g);
+});
+
+for (let i=0;i<9;i++){
+  const o=document.createElement('div');
+  o.className='orange-fruit';
+  o.style.left=(15+Math.random()*70)+'%';
+  o.style.top=(20+Math.random()*55)+'%';
+  orangeTree.querySelector('.orange-canopy').appendChild(o);
+}
+
+for (let i=0;i<7;i++){
+  const l=document.createElement('div');
+  l.className='falling-leaf';
+  l.style.left=(Math.random()*100)+'%';
+  l.style.top=(58+Math.random()*14)+'%';
+  l.style.animationDuration=(6+Math.random()*5)+'s, '+(1.6+Math.random()*1.6)+'s';
+  l.style.animationDelay=(Math.random()*8)+'s, 0s';
+  stage.appendChild(l);
+}
+</script>
+</body>
+</html>
