@@ -1,23 +1,196 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Ruru's Rainbow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深林花溪</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(to right, #ff9a9e, #fad0c4, #fad0c4, #a18cd1, #fbc2eb);
-            font-family: sans-serif;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background:
+                radial-gradient(circle at 50% 18%, rgba(155, 219, 164, 0.28), transparent 22%),
+                linear-gradient(180deg, #071b12 0%, #0d2d1f 42%, #12351f 100%);
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            color: #fff;
+        }
+
+        .forest {
+            position: relative;
+            width: min(100vw, 1200px);
+            height: min(100vh, 760px);
+            overflow: hidden;
+            border-radius: 28px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+            background:
+                linear-gradient(180deg, rgba(9, 31, 21, 0) 0%, rgba(5, 18, 10, 0.82) 100%),
+                radial-gradient(circle at 50% 12%, rgba(210, 255, 218, 0.24), transparent 21%);
+        }
+
+        .mist {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 18% 60%, rgba(210, 255, 224, 0.15), transparent 34%),
+                radial-gradient(ellipse at 78% 52%, rgba(178, 229, 200, 0.12), transparent 30%);
+            filter: blur(2px);
+            opacity: 0.75;
+        }
+
+        .tree {
+            position: absolute;
+            bottom: 95px;
+            width: 34px;
+            height: 390px;
+            border-radius: 20px 20px 4px 4px;
+            background: linear-gradient(90deg, #1d130a, #4a2c16 45%, #1a0e08);
+            box-shadow: inset 8px 0 0 rgba(255,255,255,0.05), 0 24px 40px rgba(0,0,0,0.35);
+        }
+
+        .tree::before,
+        .tree::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 35%, #3b7a3b, #19491f 70%);
+            box-shadow: 0 0 38px rgba(0, 0, 0, 0.25);
+        }
+
+        .tree::before {
+            top: -95px;
+        }
+
+        .tree::after {
+            top: -8px;
+            width: 135px;
+            height: 135px;
+            background: radial-gradient(circle at 40% 35%, #2f6b36, #123b1b 72%);
+        }
+
+        .tree:nth-child(2) { left: 5%; transform: scale(1.12); }
+        .tree:nth-child(3) { left: 18%; transform: scale(0.88); bottom: 120px; opacity: 0.82; }
+        .tree:nth-child(4) { left: 33%; transform: scale(1.23); }
+        .tree:nth-child(5) { right: 30%; transform: scale(0.96); bottom: 118px; opacity: 0.88; }
+        .tree:nth-child(6) { right: 14%; transform: scale(1.18); }
+        .tree:nth-child(7) { right: 3%; transform: scale(0.93); bottom: 128px; opacity: 0.8; }
+
+        .stream {
+            position: absolute;
+            left: 50%;
+            bottom: -80px;
+            width: 285px;
+            height: 560px;
+            transform: translateX(-50%) perspective(560px) rotateX(58deg);
+            border-radius: 52% 48% 42% 58% / 100% 100% 0 0;
+            background:
+                repeating-linear-gradient(105deg, rgba(255,255,255,0.38) 0 9px, transparent 9px 34px),
+                linear-gradient(90deg, rgba(35, 184, 207, 0.62), rgba(178, 242, 255, 0.9), rgba(19, 112, 154, 0.72));
+            box-shadow: 0 0 40px rgba(116, 228, 255, 0.45), inset 0 0 45px rgba(255, 255, 255, 0.4);
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            from { background-position: 0 0, 0 0; }
+            to { background-position: 0 70px, 0 0; }
+        }
+
+        .bank {
+            position: absolute;
+            bottom: 0;
+            width: 54%;
+            height: 260px;
+            background: linear-gradient(180deg, rgba(37, 93, 42, 0), #1d5d2b 26%, #153f1c 100%);
+        }
+
+        .bank.left {
+            left: 0;
+            clip-path: polygon(0 0, 78% 16%, 100% 100%, 0 100%);
+        }
+
+        .bank.right {
+            right: 0;
+            clip-path: polygon(22% 16%, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .flower {
+            position: absolute;
+            bottom: var(--bottom);
+            left: var(--left);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--color);
+            box-shadow:
+                0 -10px 0 var(--color),
+                0 10px 0 var(--color),
+                -10px 0 0 var(--color),
+                10px 0 0 var(--color),
+                0 0 0 5px #ffd45c;
+            transform: scale(var(--scale));
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.25));
+        }
+
+        .flower::after {
+            content: "";
+            position: absolute;
+            left: 7px;
+            top: 13px;
+            width: 2px;
+            height: 34px;
+            background: #55b85d;
+            z-index: -1;
+        }
+
+        .title {
+            position: absolute;
+            top: 36px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 18px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: 999px;
+            background: rgba(4, 24, 15, 0.38);
+            backdrop-filter: blur(8px);
+            font-size: clamp(1.8rem, 5vw, 4rem);
+            letter-spacing: 0.18em;
+            text-shadow: 0 5px 18px rgba(0,0,0,0.55);
+            white-space: nowrap;
         }
     </style>
 </head>
 <body>
-    <h1>欢迎来到 Ruru 的彩虹仓库！</h1>
+    <main class="forest" aria-label="深林里有潺潺流水和五颜六色鲜花的景色">
+        <div class="mist"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="stream" aria-hidden="true"></div>
+        <div class="bank left"></div>
+        <div class="bank right"></div>
+        <div class="flower" style="--left: 8%; --bottom: 84px; --color: #ff5ebc; --scale: 0.86;"></div>
+        <div class="flower" style="--left: 16%; --bottom: 152px; --color: #ffe45e; --scale: 0.7;"></div>
+        <div class="flower" style="--left: 25%; --bottom: 62px; --color: #a278ff; --scale: 0.96;"></div>
+        <div class="flower" style="--left: 34%; --bottom: 132px; --color: #ff7a59; --scale: 0.72;"></div>
+        <div class="flower" style="--left: 64%; --bottom: 134px; --color: #5ee7ff; --scale: 0.74;"></div>
+        <div class="flower" style="--left: 72%; --bottom: 70px; --color: #ff5e6c; --scale: 0.92;"></div>
+        <div class="flower" style="--left: 82%; --bottom: 156px; --color: #7dff73; --scale: 0.72;"></div>
+        <div class="flower" style="--left: 91%; --bottom: 94px; --color: #ff9df2; --scale: 0.82;"></div>
+        <h1 class="title">深林花溪</h1>
+    </main>
 </body>
 </html>
