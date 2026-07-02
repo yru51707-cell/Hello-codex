@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>河边的傍晚</title>
+<style>
+  :root{
+    --sky-top:#1b1440;
+    --sky-mid:#3d2f7a;
+    --sky-glow:#6d4fb8;
+    --water-deep:#241a52;
+    --water-mid:#4a3a94;
+    --moon:#dcd3f7;
+    --firefly:#f4e6a1;
+    --ui-panel:rgba(20,14,46,0.72);
+    --ui-border:rgba(160,140,230,0.35);
+    --text-soft:#e6defc;
+    --accent:#9b7fe0;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; height:100%; overflow:hidden; font-family:"PingFang SC","Microsoft YaHei",sans-serif; background:var(--sky-top);}
+  #scene{position:fixed; inset:0; overflow:hidden;}
+
+  #sky{position:absolute; inset:0;
+    background:linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 45%, var(--sky-glow) 100%);
+    transition:background 2s ease;
+  }
+  #moon{position:absolute; top:8%; right:14%; width:52px; height:52px; border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, #fdfaff, var(--moon));
+    box-shadow:0 0 40px 10px rgba(220,211,247,0.45);
+  }
+  .star{position:absolute; width:2px; height:2px; background:#fff; border-radius:50%; opacity:0.7; animation:twinkle 3s ease-in-out infinite;}
+  @keyframes twinkle{0%,100%{opacity:0.2;} 50%{opacity:0.9;}}
+
+  #water{position:absolute; left:0; right:0; bottom:0; height:38%;
+    background:linear-gradient(180deg, var(--water-mid) 0%, var(--water-deep) 100%);
+  }
+  .ripple{position:absolute; border:1px solid rgba(200,190,250,0.35); border-radius:50%;
+    animation:rippleOut 3s ease-out forwards;
+  }
+  @keyframes rippleOut{
+    0%{width:0; height:0; opacity:0.6; transform:translate(-50%,-50%);}
+    100%{width:140px; height:40px; opacity:0; transform:translate(-50%,-50%);}
+  }
+  .moon-reflect{position:absolute; bottom:0; left:50%; width:6px; transform:translateX(-50%);
+    background:linear-gradient(180deg, rgba(220,211,247,0.5), rgba(220,211,247,0));
+    filter:blur(1px); opacity:0.6;
+  }
+
+  .reed-layer{position:absolute; bottom:34%; left:0; right:0; height:22%; pointer-events:none;}
+  .reed{position:absolute; bottom:0; width:3px; background:linear-gradient(180deg,#2a2058,#171034);
+    transform-origin:bottom center; border-radius:3px 3px 0 0;
+    animation:sway 4s ease-in-out infinite;
+  }
+  .reed::after{content:''; position:absolute; top:-14px; left:-3px; width:9px; height:16px;
+    background:#2a2058; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  }
+  @keyframes sway{
+    0%,100%{transform:rotate(-4deg);}
+    50%{transform:rotate(4deg);}
+  }
+
+  .firefly{position:absolute; width:5px; height:5px; border-radius:50%;
+    background:var(--firefly); box-shadow:0 0 8px 3px rgba(244,230,161,0.7);
+    animation:floaty 6s ease-in-out infinite, glow 2s ease-in-out infinite;
+  }
+  @keyframes floaty{
+    0%{transform:translate(0,0);}
+    25%{transform:translate(20px,-30px);}
+    50%{transform:translate(-15px,-55px);}
+    75%{transform:translate(25px,-20px);}
+    100%{transform:translate(0,0);}
+  }
+  @keyframes glow{0%,100%{opacity:0.3;} 50%{opacity:1;}}
+
+  #rock{position:absolute; bottom:30%; left:12%; width:90px; height:36px;
+    background:linear-gradient(180deg,#3a2f6e,#241a52); border-radius:50% 50% 40% 40% / 60% 60% 40% 40%;
+    box-shadow:inset 0 -6px 10px rgba(0,0,0,0.3);
+  }
+
+  #rod{position:absolute; bottom:34%; left:20%; width:4px; height:130px;
+    background:linear-gradient(180deg,#8a76d1,#4b3d8f); border-radius:4px; transform-origin:bottom center;
+    transform:rotate(18deg);
+  }
+  #line{position:absolute; bottom:34%; left:calc(20% + 60px); width:1px; height:0px;
+    background:rgba(230,222,252,0.55);
+  }
+  #bobber{position:absolute; width:10px; height:10px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #ffe9a8, #c9973f);
+    box-shadow:0 0 6px rgba(255,220,140,0.6);
+  }
+
+  #topbar{position:absolute; top:0; left:0; right:0; padding:16px 18px; display:flex; justify-content:space-between; align-items:center; z-index:10;}
+  #title{color:var(--text-soft); font-size:15px; letter-spacing:2px; opacity:0.85;}
+  #catchCount{color:var(--text-soft); background:var(--ui-panel); border:1px solid var(--ui-border);
+    padding:6px 14px; border-radius:999px; font-size:13px; backdrop-filter:blur(6px);}
+
+  #status{position:absolute; left:50%; top:20%; transform:translateX(-50%); color:var(--text-soft);
+    font-size:14px; text-align:center; opacity:0.75; z-index:10; width:80%; line-height:1.7;
+  }
+
+  #actionBtn{position:absolute; left:50%; bottom:8%; transform:translateX(-50%);
+    padding:14px 36px; border-radius:999px; border:1px solid var(--ui-border);
+    background:var(--ui-panel); color:var(--text-soft); font-size:16px; letter-spacing:3px;
+    backdrop-filter:blur(8px); z-index:10; transition:all 0.25s ease;
+  }
+  #actionBtn:active{transform:translateX(-50%) scale(0.94);}
+  #actionBtn.bite{background:linear-gradient(135deg, var(--accent), #6d4fb8); border-color:transparent;
+    box-shadow:0 0 26px rgba(155,127,224,0.7); animation:pulse 0.6s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:translateX(-50%) scale(1);} 50%{transform:translateX(-50%) scale(1.06);}}
+
+  #fishPopup{position:absolute; left:50%; top:38%; transform:translate(-50%,-40%) scale(0.7); opacity:0;
+    background:var(--ui-panel); border:1px solid var(--ui-border); border-radius:18px; padding:22px 30px;
+    text-align:center; color:var(--text-soft); z-index:20; backdrop-filter:blur(10px);
+    transition:all 0.35s cubic-bezier(.34,1.56,.64,1); pointer-events:none;
+  }
+  #fishPopup.show{opacity:1; transform:translate(-50%,-50%) scale(1);}
+  #fishPopup .fish-emoji{font-size:40px; display:block; margin-bottom:6px;}
+
+  #basket{position:absolute; bottom:4%; right:5%; display:flex; gap:4px; z-index:10; font-size:20px;}
+</style>
+</head>
+<body>
+<div id="scene">
+  <div id="sky">
+    <div id="moon"></div>
+    <div id="starLayer"></div>
+  </div>
+  <div class="reed-layer" id="reedLayer"></div>
+  <div id="rock"></div>
+  <div id="water">
+    <div class="moon-reflect" style="height:100%;"></div>
+    <div id="rippleLayer"></div>
+  </div>
+  <div id="rod"></div>
+  <div id="line"></div>
+  <div id="bobber"></div>
+  <div id="fireflyLayer"></div>
+</div>
+
+<div id="topbar">
+  <div id="title">河 边 · 傍 晚</div>
+  <div id="catchCount">今日渔获 0 条</div>
+</div>
+
+<div id="status">河风轻轻吹着,芦苇沙沙响。<br>抛竿,等鱼上钩吧。</div>
+
+<div id="fishPopup">
+  <span class="fish-emoji">🐟</span>
+  <div id="fishText">钓到一条鲫鱼!</div>
+</div>
+
+<div id="basket"></div>
+
+<button id="actionBtn">抛 竿</button>
+
+<script>
+const actionBtn = document.getElementById('actionBtn');
+const statusEl = document.getElementById('status');
+const bobber = document.getElementById('bobber');
+const line = document.getElementById('line');
+const fishPopup = document.getElementById('fishPopup');
+const fishText = document.getElementById('fishText');
+const catchCount = document.getElementById('catchCount');
+const basket = document.getElementById('basket');
+const rippleLayer = document.getElementById('rippleLayer');
+const rod = document.getElementById('rod');
+
+let state = 'idle';
+let bites = 0;
+let biteTimer = null;
+
+function placeBobber(){
+  const waterTop = window.innerHeight * 0.62;
+  const rodRect = rod.getBoundingClientRect();
+  const bx = rodRect.left + rodRect.width/2 + 70;
+  bobber.style.left = bx + 'px';
+  bobber.style.top = waterTop + 20 + 'px';
+  line.style.left = (rodRect.left + rodRect.width/2) + 'px';
+  line.style.bottom = (window.innerHeight - rodRect.top - 6) + 'px';
+  line.style.height = (rodRect.top + 6 - (waterTop+20)) + 'px' ;
+}
+window.addEventListener('resize', placeBobber);
+
+function makeRipple(x){
+  const r = document.createElement('div');
+  r.className = 'ripple';
+  r.style.left = x + 'px';
+  r.style.bottom = '10px';
+  rippleLayer.appendChild(r);
+  setTimeout(()=>r.remove(), 3000);
+}
+
+function setStatus(text){ statusEl.innerHTML = text; }
+
+function startWaiting(){
+  state = 'waiting';
+  actionBtn.textContent = '等 待 中…';
+  actionBtn.classList.remove('bite');
+  setStatus('浮标静静地漂着,风吹芦苇沙沙响…');
+  makeRipple(bobber.offsetLeft);
+  const waitTime = 2200 + Math.random()*3200;
+  biteTimer = setTimeout(()=>{
+    state = 'biting';
+    actionBtn.textContent = '拉 杆!';
+    actionBtn.classList.add('bite');
+    setStatus('浮标猛地一沉——有动静!');
+    bobber.style.transition = 'transform 0.15s ease';
+    bobber.style.transform = 'translateY(6px)';
+  }, waitTime);
+}
+
+const fishNames = ['鲫鱼','小鲤鱼','白条','草鱼苗','虾虎'];
+const fishEmojis = ['🐟','🐠','🐡'];
+
+function catchFish(){
+  bites += 1;
+  catchCount.textContent = '今日渔获 ' + bites + ' 条';
+  const name = fishNames[Math.floor(Math.random()*fishNames.length)];
+  fishText.textContent = '钓到一条' + name + '!';
+  fishPopup.querySelector('.fish-emoji').textContent = fishEmojis[Math.floor(Math.random()*fishEmojis.length)];
+  fishPopup.classList.add('show');
+  setTimeout(()=>fishPopup.classList.remove('show'), 1400);
+
+  const span = document.createElement('span');
+  span.textContent = fishEmojis[Math.floor(Math.random()*fishEmojis.length)];
+  basket.appendChild(span);
+
+  bobber.style.transform = 'translateY(0)';
+  setStatus('鱼获入桶,晚饭有着落啦~');
+  actionBtn.classList.remove('bite');
+  actionBtn.textContent = '再 抛 竿';
+  state = 'idle';
+}
+
+function missFish(){
+  setStatus('唉,鱼跑了,再试试~');
+  bobber.style.transform = 'translateY(0)';
+  actionBtn.classList.remove('bite');
+  actionBtn.textContent = '抛 竿';
+  state = 'idle';
+}
+
+actionBtn.addEventListener('click', ()=>{
+  if(state === 'idle'){
+    startWaiting();
+  } else if(state === 'biting'){
+    clearTimeout(biteTimer);
+    catchFish();
+  } else if(state === 'waiting'){
+    setStatus('还没上钩呢,再等等~');
+  }
+});
+
+const starLayer = document.getElementById('starLayer');
+for(let i=0;i<40;i++){
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.left = Math.random()*100 + '%';
+  s.style.top = Math.random()*55 + '%';
+  s.style.animationDelay = (Math.random()*3)+'s';
+  starLayer.appendChild(s);
+}
+
+const reedLayer = document.getElementById('reedLayer');
+for(let i=0;i<28;i++){
+  const r = document.createElement('div');
+  r.className = 'reed';
+  const h = 40 + Math.random()*50;
+  r.style.height = h + 'px';
+  r.style.left = (Math.random()*100) + '%';
+  r.style.animationDuration = (3+Math.random()*2.5)+'s';
+  r.style.animationDelay = (Math.random()*3)+'s';
+  reedLayer.appendChild(r);
+}
+
+const fireflyLayer = document.getElementById('fireflyLayer');
+for(let i=0;i<16;i++){
+  const f = document.createElement('div');
+  f.className = 'firefly';
+  f.style.left = (10+Math.random()*80) + '%';
+  f.style.top = (35+Math.random()*40) + '%';
+  f.style.animationDuration = (5+Math.random()*3)+'s, '+(1.5+Math.random()*1.5)+'s';
+  f.style.animationDelay = (Math.random()*4)+'s';
+  fireflyLayer.appendChild(f);
+}
+
+placeBobber();
+setTimeout(placeBobber, 100);
+</script>
+</body>
+</html>
