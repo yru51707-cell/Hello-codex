@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>崽子大团聚</title>
+<style>
+  :root{
+    --sky-top:#0b0a2e;
+    --sky-mid:#2d1b69;
+    --sky-low:#5b3a9e;
+    --water:#1a1550;
+    --glow:#a78bfa;
+    --moon:#e6e0ff;
+    --rose:#c4a3ff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{
+    width:100%;height:100%;
+    overflow:hidden;
+    font-family:"Songti SC","STSong","SimSun",serif;
+    background:var(--sky-top);
+  }
+  #scene{
+    position:relative;
+    width:100vw;height:100vh;
+    background:linear-gradient(to bottom,
+      var(--sky-top) 0%,
+      var(--sky-mid) 40%,
+      var(--sky-low) 62%,
+      var(--water) 63%,
+      #0d0a30 100%);
+    overflow:hidden;
+  }
+
+  .moon{
+    position:absolute; top:8%; left:12%;
+    width:70px;height:70px;border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, #fff, var(--moon) 60%, #b7a8f0 100%);
+    box-shadow:0 0 40px 10px rgba(230,224,255,0.5), 0 0 90px 30px rgba(167,139,250,0.25);
+  }
+
+  .star{
+    position:absolute;
+    width:2px;height:2px;
+    background:#fff;
+    border-radius:50%;
+    animation:twinkle 3s ease-in-out infinite;
+    opacity:.7;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:.2;}
+    50%{opacity:1;}
+  }
+
+  .firefly{
+    position:absolute;
+    width:4px;height:4px;
+    border-radius:50%;
+    background:#d9c8ff;
+    box-shadow:0 0 8px 3px rgba(217,200,255,0.8);
+    animation:drift linear infinite;
+  }
+  @keyframes drift{
+    0%{ transform:translate(0,0); opacity:0;}
+    10%{opacity:1;}
+    50%{ transform:translate(20px,-60px);}
+    90%{opacity:1;}
+    100%{ transform:translate(-10px,-140px); opacity:0;}
+  }
+
+  .water-shimmer{
+    position:absolute;
+    bottom:0; left:0; width:100%; height:37%;
+    background:repeating-linear-gradient(
+      100deg,
+      rgba(167,139,250,0.05) 0px,
+      rgba(167,139,250,0.12) 2px,
+      transparent 4px,
+      transparent 40px
+    );
+    animation:shimmer 6s linear infinite;
+  }
+  @keyframes shimmer{
+    0%{background-position-x:0;}
+    100%{background-position-x:200px;}
+  }
+
+  .reed{
+    position:absolute;
+    bottom:35%;
+    width:3px;
+    background:linear-gradient(to top, #2a1f5e, #6d4fc7);
+    transform-origin:bottom center;
+    animation:sway 4s ease-in-out infinite;
+    border-radius:3px;
+  }
+  @keyframes sway{
+    0%,100%{transform:rotate(-4deg);}
+    50%{transform:rotate(4deg);}
+  }
+
+  .fisherman{
+    position:absolute;
+    bottom:36%;
+    left:22%;
+    width:60px; height:90px;
+    z-index:5;
+  }
+  .fisherman .body{
+    position:absolute; bottom:0; left:20px;
+    width:16px; height:55px;
+    background:#0a0720;
+    border-radius:8px 8px 0 0;
+  }
+  .fisherman .head{
+    position:absolute; bottom:52px; left:20px;
+    width:18px; height:18px;
+    background:#0a0720;
+    border-radius:50%;
+  }
+  .fisherman .rod{
+    position:absolute; bottom:60px; left:34px;
+    width:70px; height:2px;
+    background:#0a0720;
+    transform:rotate(-25deg);
+    transform-origin:left center;
+  }
+  .fisherman .line{
+    position:absolute; bottom:-30px; left:98px;
+    width:1px; height:70px;
+    background:rgba(10,7,32,0.6);
+  }
+
+  .poem-group{
+    position:absolute;
+    top:26%;
+    left:16%;
+    display:flex;
+    gap:14px;
+    z-index:6;
+  }
+  .poem{
+    color:rgba(230,224,255,0.85);
+    font-size:15px;
+    letter-spacing:3px;
+    writing-mode:vertical-rl;
+    text-shadow:0 0 8px rgba(167,139,250,0.6);
+    user-select:none;
+    pointer-events:none;
+    animation:glow 4s ease-in-out infinite;
+  }
+  @keyframes glow{
+    0%,100%{ opacity:0.6;}
+    50%{ opacity:1;}
+  }
+
+  .tetris{
+    position:absolute;
+    display:grid;
+    grid-template-columns:repeat(2,14px);
+    grid-template-rows:repeat(2,14px);
+    gap:2px;
+    animation:floaty 5s ease-in-out infinite;
+    opacity:0.9;
+    filter:drop-shadow(0 0 6px rgba(167,139,250,0.7));
+  }
+  .tetris div{
+    width:14px;height:14px;
+    border-radius:2px;
+  }
+  .tetris .c1{background:#7c5cff;}
+  .tetris .c2{background:#5b8cff;}
+  .tetris .c3{background:#a78bfa;}
+  .tetris .c4{background:#6ea8ff;}
+  @keyframes floaty{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-14px);}
+  }
+
+  .roses{
+    position:absolute;
+    bottom:37%;
+    right:8%;
+    width:140px;
+    height:160px;
+    z-index:4;
+  }
+  .rose-flower{
+    position:absolute;
+    width:20px;height:20px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, #e8d9ff, var(--rose) 55%, #7c5cff 100%);
+    box-shadow:
+      0 0 0 4px rgba(124,92,255,0.15),
+      0 0 10px rgba(167,139,250,0.5);
+    border:1px solid rgba(255,255,255,0.15);
+  }
+  .rose-stem{
+    position:absolute;
+    width:2px;
+    background:linear-gradient(to top,#241a4d,#5a4499);
+  }
+  .rose-leaf{
+    position:absolute;
+    width:10px;height:6px;
+    background:#4a3a8c;
+    border-radius:0 100% 0 100%;
+  }
+
+  .caption{
+    position:absolute;
+    bottom:4%;
+    width:100%;
+    text-align:center;
+    color:rgba(230,224,255,0.55);
+    font-size:13px;
+    letter-spacing:4px;
+    z-index:10;
+  }
+
+  .title{
+    position:absolute;
+    top:5%;
+    width:100%;
+    text-align:center;
+    color:#e6e0ff;
+    font-size:22px;
+    letter-spacing:8px;
+    text-shadow:0 0 12px rgba(167,139,250,0.6);
+    z-index:10;
+  }
+</style>
+</head>
+<body>
+<div id="scene">
+  <div class="title">崽 子 大 团 聚</div>
+  <div class="moon"></div>
+  <div class="poem-group" id="poemGroup"></div>
+
+  <div class="water-shimmer"></div>
+
+  <div class="fisherman">
+    <div class="head"></div>
+    <div class="body"></div>
+    <div class="rod"></div>
+    <div class="line"></div>
+  </div>
+
+  <div class="roses" id="roses"></div>
+
+  <div class="tetris" style="top:18%; right:15%;">
+    <div class="c1"></div><div class="c2"></div>
+    <div class="c3"></div><div class="c4"></div>
+  </div>
+
+  <div class="caption">诗词飘落 · 灯火摇曳 · 花开成簇 · 方块作伴</div>
+</div>
+
+<script>
+const scene = document.getElementById('scene');
+
+for(let i=0;i<60;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  s.style.left=Math.random()*100+'%';
+  s.style.top=Math.random()*45+'%';
+  s.style.animationDelay=(Math.random()*3)+'s';
+  scene.appendChild(s);
+}
+
+for(let i=0;i<18;i++){
+  const f=document.createElement('div');
+  f.className='firefly';
+  f.style.left=(10+Math.random()*80)+'%';
+  f.style.top=(45+Math.random()*40)+'%';
+  f.style.animationDuration=(4+Math.random()*4)+'s';
+  f.style.animationDelay=(Math.random()*4)+'s';
+  scene.appendChild(f);
+}
+
+for(let i=0;i<14;i++){
+  const r=document.createElement('div');
+  r.className='reed';
+  const h=30+Math.random()*40;
+  r.style.height=h+'px';
+  r.style.left=(2+Math.random()*94)+'%';
+  r.style.animationDuration=(3+Math.random()*3)+'s';
+  r.style.animationDelay=(Math.random()*2)+'s';
+  scene.appendChild(r);
+}
+
+const poemGroup = document.getElementById('poemGroup');
+const poems = ["月出惊山鸟","独钓寒江雪"];
+poems.forEach((text,i)=>{
+  const p=document.createElement('div');
+  p.className='poem';
+  p.textContent = text;
+  p.style.animationDelay=(i*1.2)+'s';
+  poemGroup.appendChild(p);
+});
+
+const rosesEl = document.getElementById('roses');
+const rosePositions = [
+  {x:0,  h:60},
+  {x:34, h:95},
+  {x:68, h:55},
+  {x:16, h:120},
+  {x:52, h:110}
+];
+rosePositions.forEach((pos,i)=>{
+  const stem=document.createElement('div');
+  stem.className='rose-stem';
+  stem.style.left=(pos.x+9)+'px';
+  stem.style.bottom='0px';
+  stem.style.height=pos.h+'px';
+  stem.style.transform=`rotate(${(i-2)*4}deg)`;
+  stem.style.transformOrigin='bottom center';
+  rosesEl.appendChild(stem);
+
+  const leaf=document.createElement('div');
+  leaf.className='rose-leaf';
+  leaf.style.left=(pos.x-2)+'px';
+  leaf.style.bottom=(pos.h*0.4)+'px';
+  leaf.style.transform=`rotate(${(i%2===0?-25:25)}deg)`;
+  rosesEl.appendChild(leaf);
+
+  const flower=document.createElement('div');
+  flower.className='rose-flower';
+  flower.style.left=pos.x+'px';
+  flower.style.bottom=(pos.h-4)+'px';
+  rosesEl.appendChild(flower);
+});
+</script>
+</body>
+</html>
