@@ -1,23 +1,450 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Ruru's Rainbow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>苏州园林与玫瑰</title>
     <style>
+        :root {
+            --ink: #111111;
+            --panel: #202020;
+            --paper: #f7f3ea;
+            --wood: #4f1815;
+            --roof: #2e2c29;
+            --water: #315d54;
+            --leaf: #2f7a39;
+            --rose-red: #d90823;
+            --rose-pink: #ff83bc;
+            --rose-blue: #2fa8ff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            display: grid;
+            place-items: center;
+            background: #000;
+            font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+            color: #fff;
+        }
+
+        .phone {
+            position: relative;
+            width: min(100vw, 430px);
+            min-height: 932px;
+            overflow: hidden;
+            background: var(--ink);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+        }
+
+        .status-bar {
+            height: 88px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            background: linear-gradient(to right, #ff9a9e, #fad0c4, #fad0c4, #a18cd1, #fbc2eb);
-            font-family: sans-serif;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            justify-content: space-between;
+            padding: 0 38px;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .signals {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .bars {
+            display: flex;
+            align-items: end;
+            gap: 3px;
+        }
+
+        .bars span {
+            width: 4px;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .bars span:nth-child(1) { height: 8px; opacity: 0.75; }
+        .bars span:nth-child(2) { height: 12px; opacity: 0.85; }
+        .bars span:nth-child(3) { height: 16px; }
+        .bars span:nth-child(4) { height: 21px; opacity: 0.45; }
+
+        .battery {
+            position: relative;
+            width: 26px;
+            height: 13px;
+            border: 2px solid rgba(255, 255, 255, 0.75);
+            border-radius: 4px;
+        }
+
+        .battery::before {
+            content: "";
+            position: absolute;
+            top: 1px;
+            left: 2px;
+            width: 6px;
+            height: 7px;
+            border-radius: 2px;
+            background: #ff3b30;
+        }
+
+        .battery::after {
+            content: "";
+            position: absolute;
+            right: -5px;
+            top: 3px;
+            width: 2px;
+            height: 5px;
+            border-radius: 0 2px 2px 0;
+            background: rgba(255, 255, 255, 0.65);
+        }
+
+        .gallery-top {
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: var(--panel);
+            border-radius: 22px 22px 0 0;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .close {
+            position: absolute;
+            left: 25px;
+            width: 26px;
+            height: 26px;
+        }
+
+        .close::before,
+        .close::after {
+            content: "";
+            position: absolute;
+            left: 12px;
+            top: -2px;
+            width: 3px;
+            height: 32px;
+            border-radius: 5px;
+            background: #fff;
+        }
+
+        .close::before { transform: rotate(45deg); }
+        .close::after { transform: rotate(-45deg); }
+
+        .stage {
+            height: 650px;
+            display: flex;
+            align-items: center;
+        }
+
+        .postcard {
+            position: relative;
+            width: 100%;
+            height: 330px;
+            overflow: hidden;
+            background: linear-gradient(#cfe7ff 0 32%, #9fce82 32% 48%, #d5c6a1 48% 55%, #446f61 55% 100%);
+        }
+
+        .tree {
+            position: absolute;
+            border-radius: 50% 50% 45% 45%;
+            background: radial-gradient(circle at 30% 25%, #a7d932, #3b8d2f 58%, #1f5b2d 100%);
+            filter: drop-shadow(0 8px 4px rgba(0,0,0,0.18));
+        }
+
+        .tree.t1 { width: 178px; height: 145px; left: -32px; top: 38px; }
+        .tree.t2 { width: 164px; height: 135px; left: 174px; top: 8px; }
+        .tree.t3 { width: 145px; height: 116px; right: -30px; top: 58px; opacity: 0.72; }
+
+        .garden-house {
+            position: absolute;
+            left: 130px;
+            top: 70px;
+            width: 250px;
+            height: 156px;
+        }
+
+        .white-wall {
+            position: absolute;
+            right: 0;
+            bottom: 20px;
+            width: 142px;
+            height: 118px;
+            background: linear-gradient(110deg, #fffefa, #e9eadf);
+            box-shadow: inset -20px 0 30px rgba(0,0,0,0.08);
+        }
+
+        .white-wall::after {
+            content: "";
+            position: absolute;
+            right: 18px;
+            bottom: 14px;
+            width: 24px;
+            height: 48px;
+            border-radius: 18px 18px 0 0;
+            background: #20231d;
+        }
+
+        .pavilion {
+            position: absolute;
+            left: 0;
+            bottom: 32px;
+            width: 142px;
+            height: 92px;
+            background: repeating-linear-gradient(90deg, var(--wood) 0 8px, transparent 8px 28px), linear-gradient(#6b221c, #2b100e);
+            border-bottom: 10px solid #33110f;
+        }
+
+        .roof {
+            position: absolute;
+            height: 48px;
+            background: var(--roof);
+            border-radius: 0 0 50% 50%;
+            box-shadow: inset 0 -8px 0 #171715;
+            clip-path: polygon(0 58%, 11% 31%, 42% 16%, 58% 16%, 89% 31%, 100% 58%, 88% 74%, 68% 55%, 50% 47%, 32% 55%, 12% 74%);
+        }
+
+        .roof.main { left: -16px; top: 2px; width: 178px; }
+        .roof.side { right: 2px; top: 20px; width: 138px; transform: scaleX(-1); }
+
+        .railing {
+            position: absolute;
+            left: 20px;
+            top: 168px;
+            width: 300px;
+            height: 26px;
+            background: repeating-linear-gradient(90deg, #4c1a15 0 5px, transparent 5px 18px), linear-gradient(#7b2b22 0 7px, transparent 7px 19px, #431510 19px 26px);
+        }
+
+        .pond {
+            position: absolute;
+            inset: 194px 0 0;
+            background: linear-gradient(rgba(64,110,96,0.8), rgba(33,65,65,0.95));
+        }
+
+        .reflection {
+            position: absolute;
+            top: 205px;
+            width: 110px;
+            height: 118px;
+            background: linear-gradient(rgba(255,255,255,0.45), rgba(50,27,20,0));
+            filter: blur(1px);
+            transform: skewX(-12deg);
+            opacity: 0.55;
+        }
+
+        .reflection.r1 { left: 250px; }
+        .reflection.r2 { left: 135px; background: linear-gradient(rgba(62,99,52,0.65), rgba(10,20,20,0)); }
+
+        .ripples,
+        .ripples::before,
+        .ripples::after {
+            position: absolute;
+            content: "";
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 50%;
+        }
+
+        .ripples { left: 210px; top: 245px; width: 95px; height: 20px; }
+        .ripples::before { left: -95px; top: 36px; width: 70px; height: 14px; }
+        .ripples::after { left: 128px; top: 28px; width: 100px; height: 18px; }
+
+        .rose-bush {
+            position: absolute;
+            left: 22px;
+            right: 14px;
+            bottom: 10px;
+            height: 190px;
+            pointer-events: none;
+        }
+
+        .stem {
+            position: absolute;
+            bottom: 0;
+            width: 5px;
+            height: var(--h);
+            left: var(--x);
+            transform: rotate(var(--r));
+            transform-origin: bottom;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #194d20, #5da33f, #173f1b);
+        }
+
+        .leaf {
+            position: absolute;
+            width: 36px;
+            height: 19px;
+            border-radius: 100% 0 100% 0;
+            background: linear-gradient(135deg, #68b954, #155b29 78%);
+            box-shadow: inset 0 1px 6px rgba(255,255,255,0.28);
+            transform: rotate(var(--lr));
+        }
+
+        .leaf.left { left: -35px; top: 45%; }
+        .leaf.right { right: -35px; top: 56%; transform: rotate(24deg); }
+
+        .rose {
+            position: absolute;
+            left: calc(var(--x) - 28px);
+            bottom: calc(var(--h) - 8px);
+            width: var(--s);
+            height: var(--s);
+            transform: rotate(var(--r));
+            filter: drop-shadow(0 7px 8px rgba(0,0,0,0.34));
+        }
+
+        .rose .petal {
+            position: absolute;
+            inset: 16%;
+            border-radius: 55% 45% 58% 42%;
+            background: radial-gradient(circle at 35% 25%, rgba(255,255,255,0.42), transparent 22%), linear-gradient(145deg, var(--c1), var(--c2) 68%, var(--c3));
+            transform: rotate(var(--a)) translateY(var(--d));
+            box-shadow: inset 0 -4px 7px rgba(0,0,0,0.22), inset 0 3px 5px rgba(255,255,255,0.22);
+        }
+
+        .rose .petal:nth-child(1) { --a: 0deg; --d: -16px; }
+        .rose .petal:nth-child(2) { --a: 45deg; --d: -16px; }
+        .rose .petal:nth-child(3) { --a: 90deg; --d: -16px; }
+        .rose .petal:nth-child(4) { --a: 135deg; --d: -16px; }
+        .rose .petal:nth-child(5) { --a: 180deg; --d: -16px; }
+        .rose .petal:nth-child(6) { --a: 225deg; --d: -16px; }
+        .rose .petal:nth-child(7) { --a: 270deg; --d: -16px; }
+        .rose .petal:nth-child(8) { --a: 315deg; --d: -16px; }
+
+        .rose::before,
+        .rose::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            left: 28%;
+            top: 28%;
+            right: 28%;
+            bottom: 28%;
+            background: conic-gradient(from 20deg, var(--c3), var(--c1), var(--c2), var(--c3), var(--c1));
+            box-shadow: inset 0 0 7px rgba(0,0,0,0.35);
+        }
+
+        .rose::after {
+            left: 40%;
+            top: 40%;
+            right: 40%;
+            bottom: 40%;
+            background: radial-gradient(circle, #190008, var(--c3));
+        }
+
+        .red { --c1: #ff4558; --c2: var(--rose-red); --c3: #77000e; }
+        .pink { --c1: #ffd2e7; --c2: var(--rose-pink); --c3: #c4156b; }
+        .blue { --c1: #d8f7ff; --c2: var(--rose-blue); --c3: #0551b9; }
+
+        .caption {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            min-height: 150px;
+            padding: 24px 18px 54px;
+            background: linear-gradient(transparent, rgba(255,255,255,0.92) 26%, #f3f3f3);
+            font-size: 25px;
+            line-height: 1.45;
+            font-weight: 500;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.26);
+        }
+
+        .globe {
+            display: inline-grid;
+            place-items: center;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #fff 0 16%, #58a7ff 17% 62%, #1765d8 63%);
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.9);
+            vertical-align: 4px;
+        }
+
+        .home-indicator {
+            position: absolute;
+            left: 50%;
+            bottom: 17px;
+            width: 154px;
+            height: 5px;
+            transform: translateX(-50%);
+            border-radius: 999px;
+            background: #000;
         }
     </style>
 </head>
 <body>
-    <h1>欢迎来到 Ruru 的彩虹仓库！</h1>
+    <main class="phone" aria-label="苏州园林照片风格的玫瑰页面">
+        <section class="status-bar" aria-label="手机状态栏">
+            <span>22:14</span>
+            <div class="signals" aria-hidden="true">
+                <div class="bars"><span></span><span></span><span></span><span></span></div>
+                <span>4G</span>
+                <span class="battery"></span>
+            </div>
+        </section>
+
+        <section class="gallery-top" aria-label="图片浏览导航">
+            <span class="close" aria-hidden="true"></span>
+            <span>4 of 4</span>
+        </section>
+
+        <section class="stage">
+            <article class="postcard" aria-label="苏州拙政园风景和玫瑰花插画">
+                <div class="tree t1"></div>
+                <div class="tree t2"></div>
+                <div class="tree t3"></div>
+                <div class="garden-house">
+                    <div class="white-wall"></div>
+                    <div class="pavilion"></div>
+                    <div class="roof main"></div>
+                    <div class="roof side"></div>
+                    <div class="railing"></div>
+                </div>
+                <div class="pond"></div>
+                <div class="reflection r1"></div>
+                <div class="reflection r2"></div>
+                <div class="ripples"></div>
+
+                <div class="rose-bush" aria-label="新增玫瑰花束">
+                    <div class="stem" style="--x: 58px; --h: 128px; --r: -13deg; --lr: -24deg;"><span class="leaf left"></span><span class="leaf right"></span></div>
+                    <div class="rose red" style="--x: 58px; --h: 128px; --s: 72px; --r: -13deg;">
+                        <span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span>
+                    </div>
+
+                    <div class="stem" style="--x: 142px; --h: 165px; --r: 4deg; --lr: 20deg;"><span class="leaf left"></span><span class="leaf right"></span></div>
+                    <div class="rose blue" style="--x: 142px; --h: 165px; --s: 82px; --r: 4deg;">
+                        <span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span>
+                    </div>
+
+                    <div class="stem" style="--x: 232px; --h: 140px; --r: 10deg; --lr: -18deg;"><span class="leaf left"></span><span class="leaf right"></span></div>
+                    <div class="rose pink" style="--x: 232px; --h: 140px; --s: 78px; --r: 10deg;">
+                        <span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span>
+                    </div>
+
+                    <div class="stem" style="--x: 328px; --h: 116px; --r: 16deg; --lr: 28deg;"><span class="leaf left"></span><span class="leaf right"></span></div>
+                    <div class="rose red" style="--x: 328px; --h: 116px; --s: 68px; --r: 16deg;">
+                        <span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span><span class="petal"></span>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <footer class="caption">
+            <span class="globe" aria-hidden="true"></span>
+            苏州拙政园-远香堂游玩攻略简介,苏州拙政园-远香堂门票/地址/图片/开放时间/照片/玫瑰花束【携程攻略】
+        </footer>
+        <div class="home-indicator" aria-hidden="true"></div>
+    </main>
 </body>
 </html>
