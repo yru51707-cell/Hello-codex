@@ -1,23 +1,184 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Ruru's Rainbow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>真实深林溪谷</title>
     <style>
+        :root {
+            --forest-deep: #071b12;
+            --forest-mid: #123e25;
+            --forest-light: #2e7041;
+            --water: #75d7e6;
+            --water-deep: #1c7690;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(to right, #ff9a9e, #fad0c4, #fad0c4, #a18cd1, #fbc2eb);
-            font-family: sans-serif;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            overflow: hidden;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: #fff;
+            background: var(--forest-deep);
+        }
+
+        .forest-scene {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: grid;
+            place-items: center;
+            isolation: isolate;
+            background:
+                radial-gradient(circle at 50% 8%, rgba(255, 238, 170, 0.55), transparent 18%),
+                linear-gradient(180deg, #a9d6c4 0%, #567f54 30%, #1a3c25 62%, #0a1b12 100%);
+        }
+
+        .forest-scene::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -4;
+            background:
+                linear-gradient(105deg, transparent 0 13%, rgba(255,255,220,0.24) 14% 15%, transparent 23%),
+                linear-gradient(72deg, transparent 0 52%, rgba(255,255,220,0.16) 54% 55%, transparent 70%);
+            filter: blur(1px);
+        }
+
+        .canopy,
+        .tree-line,
+        .flowers,
+        .stream,
+        .mist {
+            position: absolute;
+            inset: 0;
+        }
+
+        .canopy {
+            z-index: -3;
+            background:
+                radial-gradient(circle at 8% 4%, #0d351f 0 14%, transparent 15%),
+                radial-gradient(circle at 22% 2%, #14542f 0 18%, transparent 19%),
+                radial-gradient(circle at 43% 5%, #0f4228 0 16%, transparent 17%),
+                radial-gradient(circle at 62% 0%, #1d6938 0 20%, transparent 21%),
+                radial-gradient(circle at 84% 6%, #114326 0 18%, transparent 19%),
+                radial-gradient(circle at 98% 0%, #0b2e1c 0 16%, transparent 17%);
+        }
+
+        .tree-line {
+            z-index: -2;
+            background:
+                linear-gradient(88deg, transparent 4%, #2b170d 5% 6%, transparent 7%),
+                linear-gradient(92deg, transparent 18%, #3a2114 19% 21%, transparent 22%),
+                linear-gradient(86deg, transparent 34%, #24140c 35% 36%, transparent 37%),
+                linear-gradient(91deg, transparent 51%, #3b2415 52% 54%, transparent 55%),
+                linear-gradient(87deg, transparent 70%, #24140c 71% 72%, transparent 73%),
+                linear-gradient(93deg, transparent 88%, #362012 89% 91%, transparent 92%);
+        }
+
+        .stream {
+            top: 26%;
+            z-index: -1;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.8) 0 1.5%, transparent 2.5%),
+                linear-gradient(105deg, transparent 0 38%, rgba(255,255,255,0.88) 39% 40%, transparent 41%),
+                linear-gradient(76deg, transparent 0 50%, rgba(255,255,255,0.68) 51% 52%, transparent 53%),
+                linear-gradient(120deg, transparent 0 44%, rgba(255,255,255,0.42) 45% 46%, transparent 47%),
+                linear-gradient(164deg, transparent 0 31%, var(--water-deep) 32% 41%, var(--water) 48%, #d9fbff 50%, var(--water) 52%, #0c526d 69%, transparent 70%);
+            clip-path: polygon(45% 0, 57% 0, 62% 22%, 54% 43%, 68% 69%, 78% 100%, 20% 100%, 35% 69%, 47% 45%, 39% 22%);
+            opacity: 0.93;
+        }
+
+        .stream::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(168deg, transparent 0 28px, rgba(255,255,255,0.38) 30px 34px, transparent 38px 72px);
+            animation: ripple 3.8s linear infinite;
+        }
+
+        .bank {
+            position: absolute;
+            bottom: -8vmin;
+            width: 62vmin;
+            height: 34vmin;
+            border-radius: 50%;
+            background: radial-gradient(ellipse, #24411f 0 48%, transparent 70%);
+            filter: blur(1px);
+        }
+
+        .bank.left { left: 2vw; transform: rotate(-14deg); }
+        .bank.right { right: 0; transform: rotate(13deg); }
+
+        .flowers {
+            z-index: 1;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 9% 78%, #ff4f81 0 0.8vmin, #ffd24a 0.85vmin 1.2vmin, transparent 1.25vmin),
+                radial-gradient(circle at 16% 88%, #8e5cff 0 0.9vmin, #ffe066 0.95vmin 1.25vmin, transparent 1.3vmin),
+                radial-gradient(circle at 26% 73%, #ff7b2f 0 0.85vmin, #fff2a8 0.9vmin 1.2vmin, transparent 1.25vmin),
+                radial-gradient(circle at 73% 79%, #f444ff 0 0.9vmin, #ffec70 0.95vmin 1.25vmin, transparent 1.3vmin),
+                radial-gradient(circle at 82% 88%, #44d7ff 0 0.85vmin, #fff59a 0.9vmin 1.2vmin, transparent 1.25vmin),
+                radial-gradient(circle at 91% 74%, #ffdf3d 0 0.95vmin, #ff6b6b 1vmin 1.35vmin, transparent 1.4vmin);
+        }
+
+        .mist {
+            z-index: 0;
+            background:
+                radial-gradient(ellipse at 48% 55%, rgba(230,255,242,0.24), transparent 34%),
+                radial-gradient(ellipse at 60% 72%, rgba(190,245,255,0.20), transparent 28%);
+            filter: blur(8px);
+        }
+
+        .caption {
+            position: relative;
+            z-index: 2;
+            max-width: min(760px, 88vw);
+            margin-top: -45vh;
+            padding: 1.4rem 1.8rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.28);
+            border-radius: 22px;
+            background: rgba(5, 24, 15, 0.42);
+            box-shadow: 0 20px 80px rgba(0,0,0,0.35);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            margin: 0 0 0.55rem;
+            font-size: clamp(2rem, 5vw, 4.4rem);
+            letter-spacing: 0.08em;
+        }
+
+        p {
+            margin: 0;
+            font-size: clamp(1rem, 2vw, 1.35rem);
+            color: #e7fff1;
+        }
+
+        @keyframes ripple {
+            from { transform: translateY(-4%); }
+            to { transform: translateY(7%); }
         }
     </style>
 </head>
 <body>
-    <h1>欢迎来到 Ruru 的彩虹仓库！</h1>
+    <main class="forest-scene" aria-label="真实深林中有潺潺流水和五颜六色鲜花的场景">
+        <div class="canopy"></div>
+        <div class="tree-line"></div>
+        <div class="stream" aria-hidden="true"></div>
+        <div class="bank left" aria-hidden="true"></div>
+        <div class="bank right" aria-hidden="true"></div>
+        <div class="flowers" aria-hidden="true"></div>
+        <div class="mist" aria-hidden="true"></div>
+        <section class="caption">
+            <h1>真实深林溪谷</h1>
+            <p>层层树影、潺潺流水、五颜六色的鲜花，都在这里。</p>
+        </section>
+    </main>
 </body>
 </html>
